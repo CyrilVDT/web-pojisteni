@@ -44,6 +44,25 @@ body {
 .steps > li b.t { display: block; font-size: 17px; margin-bottom: 4px; }
 .steps > li.opt::before { background: var(--full); }
 .steps > li ul { margin: 6px 0 0; padding-left: 20px; }
+
+.calc { background: #fbfaf7; border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; }
+.calc .sl { margin-bottom: 16px; }
+.calc .sl label { display: flex; justify-content: space-between; gap: 10px; font-weight: 600; font-size: 15px; }
+.calc .sl output { color: var(--accent); white-space: nowrap; }
+.calc input[type=range] { width: 100%; accent-color: var(--accent); margin: 6px 0 2px; }
+.calc .hint { font-size: 13px; color: var(--muted); }
+.calc .hint.bad { color: var(--no); }
+.calc .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+.calc .cc { background: var(--card); border-radius: 10px; padding: 10px 12px; border: 1px solid var(--line); }
+.calc .cc span { display: block; font-size: 13px; color: var(--muted); }
+.calc .cc b { font-size: 19px; }
+.calc .cc.hl { background: var(--full-soft); border-color: #b6e3da; }
+.calc .cc.hl b { color: var(--full); }
+.calc .warn { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: var(--warn-soft); color: var(--warn); font-size: 14px; }
+.calc .warn.bad { background: #fde8e8; color: var(--no); }
+.tl { display: flex; height: 30px; border-radius: 8px; overflow: hidden; margin: 16px 0 6px; font-size: 12px; font-weight: 600; color: #fff; }
+.tl div { display: flex; align-items: center; justify-content: center; white-space: nowrap; overflow: hidden; min-width: 0; }
+@media (max-width: 760px) { .calc .cards { grid-template-columns: 1fr 1fr; } }
 header { padding: 48px 0 24px; }
 header h1 { font-size: clamp(26px, 4vw, 38px); margin: 0 0 10px; }
 header p { color: var(--muted); margin: 0; max-width: 720px; font-size: 17px; }
