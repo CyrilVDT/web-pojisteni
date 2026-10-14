@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Какую страховку PVZP выбрать</title>
+<style>
+  :root {
+    --bg: #f6f4ef;
+    --card: #ffffff;
+    --ink: #1f2430;
+    --muted: #6b7280;
+    --line: #e5e1d8;
+    --basic: #c2410c;
+    --basic-soft: #fff1e8;
+    --full: #0f766e;
+    --full-soft: #e6f6f3;
+    --accent: #2563eb;
+    --warn: #b45309;
+    --warn-soft: #fff7e0;
+    --ok: #15803d;
+    --no: #b91c1c;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.55;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  header { padding: 48px 0 24px; }
+  header h1 { font-size: clamp(26px, 4vw, 38px); margin: 0 0 10px; }
+  header p { color: var(--muted); margin: 0; max-width: 720px; font-size: 17px; }
+  section { margin: 36px 0; }
+  h2 { font-size: 24px; margin: 0 0 6px; }
+  .sub { color: var(--muted); margin: 0 0 18px; }
+
+  .tldr {
+    background: var(--card); border-radius: var(--radius); padding: 22px 24px;
+    border-left: 6px solid var(--full); box-shadow: 0 1px 3px rgba(0,0,0,.05);
+  }
+  .tldr b { color: var(--full); }
+
+  .families { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .family { border-radius: var(--radius); padding: 20px 22px; }
+  .family.basic { background: var(--basic-soft); border: 1px solid #f6cdb3; }
+  .family.full { background: var(--full-soft); border: 1px solid #b6e3da; }
+  .family h3 { margin: 0 0 6px; font-size: 19px; }
+  .family.basic h3 { color: var(--basic); }
+  .family.full h3 { color: var(--full); }
+  .family .analogy { font-style: italic; color: var(--muted); margin-bottom: 8px; }
+  .family ul { margin: 8px 0 0; padding-left: 20px; }
+
+  .plans { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .plan {
+    background: var(--card); border-radius: var(--radius); padding: 18px;
+    border: 2px solid transparent; cursor: pointer; position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06); transition: transform .12s, border-color .12s;
+    display: flex; flex-direction: column;
+  }
+  .plan:hover { transform: translateY(-2px); }
+  .plan.selected { border-color: var(--accent); }
+  .plan .tag {
+    font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em;
+    padding: 3px 8px; border-radius: 999px; align-self: flex-start;
+  }
+  .plan.basic .tag { background: var(--basic-soft); color: var(--basic); }
+  .plan.full .tag { background: var(--full-soft); color: var(--full); }
+  .plan h3 { margin: 10px 0 2px; font-size: 18px; }
+  .plan .cz { color: var(--muted); font-size: 13px; }
+  .plan .price { font-size: 26px; font-weight: 700; margin: 12px 0 0; }
+  .plan .month { color: var(--muted); font-size: 14px; }
+  .plan ul { padding-left: 18px; margin: 12px 0 0; font-size: 14px; flex: 1; }
+  .plan li { margin-bottom: 4px; }
+  .plan .badge {
+    position: absolute; top: -11px; right: 12px; background: var(--full); color: #fff;
+    font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px;
+  }
+  .plan .pick {
+    margin-top: 14px; padding: 9px; border-radius: 10px; border: 1px solid var(--line);
+    background: #fafafa; font-weight: 600; text-align: center; font-size: 14px;
+  }
+  .plan.selected .pick { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: var(--radius); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+  th, td { padding: 11px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; font-size: 15px; }
+  th { background: #faf8f3; font-size: 14px; }
+  td.c, th.c { text-align: center; }
+  tr:last-child td { border-bottom: 0; }
+  tr.hl td { background: #fffbea; }
+  .y { color: var(--ok); font-weight: 600; }
+  .n { color: var(--no); font-weight: 600; }
+  .m { color: var(--warn); font-weight: 600; }
+  .small { font-size: 13px; color: var(--muted); font-weight: 400; display: block; }
+  .scroll { overflow-x: auto; }
+
+  .quiz { background: var(--card); border-radius: var(--radius); padding: 22px 24px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+  .q { margin-bottom: 18px; }
+  .q > p { margin: 0 0 8px; font-weight: 600; }
+  .q .hint { font-weight: 400; color: var(--muted); font-size: 14px; }
+  .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .opts label {
+    border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; cursor: pointer;
+    font-size: 15px; background: #fbfbfa; user-select: none;
+  }
+  .opts input { display: none; }
+  .opts input:checked + span { color: #fff; }
+  .opts label:has(input:checked) { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .result {
+    margin-top: 10px; padding: 18px 20px; border-radius: 12px; background: #f1f5ff;
+    border: 1px solid #c9d7fb; display: none;
+  }
+  .result.show { display: block; }
+  .result h3 { margin: 0 0 8px; }
+  .result ul { margin: 6px 0 0; padding-left: 20px; }
+
+  .timeline { background: var(--card); border-radius: var(--radius); padding: 22px 24px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+  .bar { display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px; margin: 14px 0 6px; }
+  .bar div { height: 34px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #fff; }
+  .bar .w1 { background: #f59e0b; }
+  .bar .w2 { background: #fbbf24; color: #5b3b00; }
+  .bar .ok { background: var(--full); }
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 14px; color: var(--muted); }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+
+  .notes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .note { background: var(--card); border-radius: var(--radius); padding: 18px 20px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+  .note h3 { margin: 0 0 6px; font-size: 17px; }
+  .note.warn { background: var(--warn-soft); }
+  .note p { margin: 6px 0 0; }
+
+  .mail { background: var(--card); border-radius: var(--radius); padding: 22px 24px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+  .mail .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .mail label.f { display: block; font-size: 14px; color: var(--muted); }
+  .mail input[type=text], .mail input[type=date], .mail select {
+    width: 100%; padding: 9px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; margin-top: 4px;
+  }
+  .checks label { display: block; margin: 6px 0; font-size: 15px; }
+  textarea {
+    width: 100%; min-height: 300px; padding: 14px; border-radius: 10px; border: 1px solid var(--line);
+    font: 14px/1.5 Consolas, "Courier New", monospace; background: #fbfbfa; margin-top: 12px;
+  }
+  button {
+    background: var(--accent); color: #fff; border: 0; border-radius: 10px; padding: 10px 18px;
+    font: inherit; font-weight: 600; cursor: pointer; margin-top: 10px;
+  }
+  button:hover { filter: brightness(1.08); }
+  footer { color: var(--muted); font-size: 13px; padding: 30px 0 50px; }
+
+  @media (max-width: 900px) {
+    .plans { grid-template-columns: 1fr 1fr; }
+    .families, .notes, .mail .row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) {
+    .plans { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Какую медицинскую страховку PVZP выбрать</h1>
+  <p>Разбор письма от Pojišťovna VZP и их документов (IPID и pojistné podmínky) простыми словами.
+     Все 4 варианта на 12 месяцев, территория ЧР + Шенген, тип пребывания «Sloučení rodiny».</p>
+</header>
+
+<section>
+  <div class="tldr">
+    <b>Коротко:</b> из четырёх вариантов на самом деле <b>два разных типа</b> страховки.
+    «Základní» (Standard и Comfort) — это по сути туристическая страховка: платит только за экстренные случаи,
+    <b>беременность и роды не покрывает вообще</b>. «Komplexní» (Exclusive и PLUS) — почти как обычная чешская
+    государственная страховка: врачи, гинеколог, профилактика, лекарства, <b>беременность и роды</b>
+    (после периода ожидания). Если дети хоть как‑то в планах — смотреть стоит только на комплексную,
+    и <b>Exclusive выходит дешевле PLUS и при этом шире</b>.
+  </div>
+</section>
+
+<section>
+  <h2>Два типа страховки</h2>
+  <p class="sub">Главная разница — не цена, а что вообще покрывается.</p>
+  <div class="families">
+    <div class="family basic">
+      <h3>Základní (базовая) — Standard / Comfort</h3>
+      <div class="analogy">Как туристическая страховка в поездку</div>
+      Платит только за <b>«nutná a neodkladná péče»</b> — когда внезапно заболела или травмировалась и лечение нельзя отложить.
+      <ul>
+        <li>Нет обычного терапевта «на приём», профилактики, прививок, плановых обследований</li>
+        <li><b>Беременность, роды, контрацепция — исключены полностью</b></li>
+        <li>Зубы — только острая боль/травма (лимит 5–10 тыс. Kč в год)</li>
+        <li>Лекарства по рецепту — только связанные с экстренным случаем</li>
+        <li>В документах прямо написано: продукт рассчитан на краткосрочное пребывание (до 90 дней)</li>
+      </ul>
+    </div>
+    <div class="family full">
+      <h3>Komplexní (комплексная) — Exclusive / PLUS</h3>
+      <div class="analogy">Почти как государственная страховка у чехов</div>
+      Покрывает примерно тот же объём, что VZP оплачивает гражданам ЧР, у договорных врачей PVZP. Лимит 10 млн Kč на случай.
+      <ul>
+        <li>Обычный врач, специалисты, гинеколог, профилактические осмотры</li>
+        <li><b>Беременность — через 3 месяца</b> от начала страховки, <b>роды — через 8 месяцев</b></li>
+        <li>Лимит «Nadstandard» на то, что даже чехам не оплачивают: гормональная контрацепция, витамины/лекарства без рецепта, очки и линзы, гигиена зубов, белые пломбы, прививки</li>
+        <li>Нужно ходить к договорным врачам PVZP и перед визитом звонить в асистенцию</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Четыре варианта из письма</h2>
+  <p class="sub">Нажмите на карточку, чтобы выбрать — внизу сгенерируется ответное письмо на чешском.</p>
+  <div class="plans" id="plans">
+    <div class="plan basic" data-id="standard">
+      <span class="tag">Базовая</span>
+      <h3>Standard</h3>
+      <div class="cz">Základní zdravotní pojištění</div>
+      <div class="price">6 390 Kč</div>
+      <div class="month">≈ 533 Kč в месяц</div>
+      <ul>
+        <li>Только экстренные случаи</li>
+        <li>Скорее всего меньший лимит (1,8 млн Kč)</li>
+        <li>Без беременности и родов</li>
+      </ul>
+      <div class="pick">Выбрать</div>
+    </div>
+    <div class="plan basic" data-id="comfort">
+      <span class="tag">Базовая</span>
+      <h3>Comfort</h3>
+      <div class="cz">Základní zdravotní pojištění</div>
+      <div class="price">14 571 Kč</div>
+      <div class="month">≈ 1 214 Kč в месяц</div>
+      <ul>
+        <li>То же самое, только экстренное</li>
+        <li>Скорее всего выше лимиты (10 млн Kč, зубы/лекарства 10 тыс.)</li>
+        <li>Без беременности и родов</li>
+      </ul>
+      <div class="pick">Выбрать</div>
+    </div>
+    <div class="plan full" data-id="exclusive">
+      <span class="badge">Рекомендую</span>
+      <span class="tag">Комплексная</span>
+      <h3>Exclusive</h3>
+      <div class="cz">Komplexní zdravotní pojištění</div>
+      <div class="price">19 967 Kč</div>
+      <div class="month">≈ 1 664 Kč в месяц</div>
+      <ul>
+        <li>Полный объём как у чехов</li>
+        <li>Зубы и лекарства — <b>без отдельного маленького лимита</b></li>
+        <li>Беременность и роды (после ожидания)</li>
+        <li>Нужна анкета о здоровье, иногда осмотр</li>
+      </ul>
+      <div class="pick">Выбрать</div>
+    </div>
+    <div class="plan full" data-id="plus">
+      <span class="tag">Комплексная</span>
+      <h3>PLUS</h3>
+      <div class="cz">Komplexní zdravotní pojištění</div>
+      <div class="price">20 052 Kč</div>
+      <div class="month">≈ 1 671 Kč в месяц</div>
+      <ul>
+        <li>Почти как Exclusive, но…</li>
+        <li>Зубы — макс. <b>5 000 Kč/год</b>, лекарства по рецепту — макс. <b>5 000 Kč/год</b></li>
+        <li>Болезни, которые были до страховки, исключены</li>
+        <li>Беременность и роды (после ожидания)</li>
+      </ul>
+      <div class="pick">Выбрать</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Что будет в конкретной ситуации</h2>
+  <p class="sub">По pojistným podmínkám из PDF. «Ожидание» = čekací doba от даты начала страховки.</p>
+  <div class="scroll">
+  <table>
+    <thead>
+      <tr>
+        <th>Ситуация</th>
+        <th class="c">Standard</th>
+        <th class="c">Comfort</th>
+        <th class="c">Exclusive</th>
+        <th class="c">PLUS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Температура, грипп — к терапевту</td>
+        <td class="c m">Только если «острое»</td><td class="c m">Только если «острое»</td><td class="c y">Да</td><td class="c y">Да</td></tr>
+      <tr><td>Аппендицит, перелом, операция</td>
+        <td class="c y">Да<span class="small">лимит, вероятно, 1,8 млн</span></td><td class="c y">Да</td><td class="c y">Да</td><td class="c y">Да</td></tr>
+      <tr><td>Профилактический осмотр у гинеколога</td>
+        <td class="c n">Нет</td><td class="c n">Нет</td><td class="c y">Да</td><td class="c y">Да</td></tr>
+      <tr class="hl"><td>Ведение беременности (УЗИ, анализы, врач)</td>
+        <td class="c n">Нет</td><td class="c n">Нет</td><td class="c y">Да, после 3 мес.</td><td class="c y">Да, после 3 мес.</td></tr>
+      <tr class="hl"><td>Роды в чешском роддоме</td>
+        <td class="c n">Нет — всё за свой счёт</td><td class="c n">Нет — всё за свой счёт</td><td class="c y">Да, после 8 мес.</td><td class="c y">Да, после 8 мес.</td></tr>
+      <tr><td>Гормональная контрацепция</td>
+        <td class="c n">Нет</td><td class="c n">Нет</td><td class="c y">Из лимита Nadstandard</td><td class="c y">Из лимита Nadstandard</td></tr>
+      <tr><td>Зубная боль, срочное лечение</td>
+        <td class="c y">Да, 5–10 тыс./год</td><td class="c y">Да, 5–10 тыс./год</td><td class="c y">Да, в общем лимите</td><td class="c m">Да, макс. 5 000/год</td></tr>
+      <tr><td>Обычная пломба, профилактика у стоматолога</td>
+        <td class="c n">Нет</td><td class="c n">Нет</td><td class="c y">Да</td><td class="c m">Да, в рамках 5 000/год</td></tr>
+      <tr><td>Лекарства по рецепту на долгое время</td>
+        <td class="c n">Нет</td><td class="c n">Нет</td><td class="c y">Да, в общем лимите</td><td class="c m">Макс. 5 000 Kč/год</td></tr>
+      <tr><td>Болезнь, которая была ещё до страховки</td>
+        <td class="c n">Нет</td><td class="c n">Нет</td><td class="c m">Если честно указана в анкете и принята</td><td class="c n">Нет (исключение)</td></tr>
+      <tr><td>Заболела в отпуске в Германии/Италии</td>
+        <td class="c y">Да, экстренно</td><td class="c y">Да, экстренно</td><td class="c y">Да, экстренно<span class="small">доп. «Шенген», лимит 2 млн</span></td><td class="c y">Да, экстренно<span class="small">доп. «Шенген», лимит 2 млн</span></td></tr>
+      <tr><td>Анкета о здоровье при оформлении</td>
+        <td class="c">—</td><td class="c">—</td><td class="c m">Да, иногда осмотр</td><td class="c">В IPID не упомянута</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>Как работает период ожидания при комплексной страховке</h2>
+  <div class="timeline">
+    12 месяцев страховки, отсчёт от даты начала договора:
+    <div class="bar">
+      <div class="w1">1</div><div class="w1">2</div><div class="w1">3</div>
+      <div class="w2">4</div><div class="w2">5</div><div class="w2">6</div><div class="w2">7</div><div class="w2">8</div>
+      <div class="ok">9</div><div class="ok">10</div><div class="ok">11</div><div class="ok">12</div>
+    </div>
+    <div class="legend">
+      <span><i style="background:#f59e0b"></i>Месяцы 1–3: ни беременность, ни роды не оплачиваются</span>
+      <span><i style="background:#fbbf24"></i>Месяцы 4–8: ведение беременности оплачивается, роды ещё нет</span>
+      <span><i style="background:#0f766e"></i>С 9-го месяца: оплачивается и то, и другое</span>
+    </div>
+    <p style="margin:14px 0 0">
+      На практике: беременность длится около 9 месяцев, поэтому если она начнётся <b>после</b> начала страховки,
+      роды почти наверняка придутся на время, когда они уже покрыты. Не оплатятся только визиты в первые 3 месяца договора.
+      Отсюда вывод: если дети в планах, комплексную страховку выгоднее оформить <b>сейчас</b>, чтобы период ожидания уже прошёл.
+    </p>
+    <p style="margin:10px 0 0">
+      Есть также тип <b>«Novorozenec»</b> — с ним периодов ожидания нет вообще и покрывается уход за новорождённым до 3 месяцев.
+      В письме его цена не указана, можно спросить (галочка в письме ниже).
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>Подбор за 1 минуту</h2>
+  <p class="sub">Ответы никуда не отправляются и не сохраняются — всё считается прямо в браузере.</p>
+  <div class="quiz" id="quiz">
+    <div class="q">
+      <p>1. Дети в ближайшие 1–2 года?</p>
+      <div class="opts">
+        <label><input type="radio" name="kids" value="yes"><span>Да</span></label>
+        <label><input type="radio" name="kids" value="maybe"><span>Может быть</span></label>
+        <label><input type="radio" name="kids" value="no"><span>Точно нет</span></label>
+      </div>
+    </div>
+    <div class="q">
+      <p>2. Работает ли она в чешской фирме по трудовому договору? <span class="hint">(HPP или DPČ/DPP, с которых платится zdravotní pojištění)</span></p>
+      <div class="opts">
+        <label><input type="radio" name="job" value="yes"><span>Да</span></label>
+        <label><input type="radio" name="job" value="no"><span>Нет</span></label>
+      </div>
+    </div>
+    <div class="q">
+      <p>3. Есть хронические болезни или лекарства, которые она принимает постоянно?</p>
+      <div class="opts">
+        <label><input type="radio" name="chronic" value="yes"><span>Да</span></label>
+        <label><input type="radio" name="chronic" value="no"><span>Нет</span></label>
+      </div>
+    </div>
+    <div class="q">
+      <p>4. Хочется ходить к врачам «как нормальный человек» — гинеколог, профилактика, зубной?</p>
+      <div class="opts">
+        <label><input type="radio" name="doctor" value="yes"><span>Да</span></label>
+        <label><input type="radio" name="doctor" value="no"><span>Нет, только если что‑то срочное</span></label>
+      </div>
+    </div>
+    <div class="result" id="result"></div>
+  </div>
+</section>
+
+<section>
+  <h2>Важно знать</h2>
+  <div class="notes">
+    <div class="note warn">
+      <h3>Роды за свой счёт — это дорого</h3>
+      <p>Если родить с базовой страховкой, роддом выставит счёт как самоплательщику: обычно десятки тысяч крон
+         за обычные роды и сотни тысяч при кесаревом или осложнениях. Разница между Standard и Exclusive — около 13 600 Kč в год.</p>
+    </div>
+    <div class="note">
+      <h3>Ребёнок, скорее всего, будет на государственной страховке</h3>
+      <p>Ребёнок отца с гражданством ЧР получает чешское гражданство по рождению и, как правило, сразу попадает
+         в государственную страховку (VZP и т.п.). Поэтому тип «Novorozenec» важнее для мамы (нет ожидания),
+         а не для самого ребёнка. Проверьте это в своей zdravotní pojišťovně.</p>
+    </div>
+    <div class="note">
+      <h3>Если она устроится на работу</h3>
+      <p>Сотрудник чешской фирмы автоматически попадает в государственную страховку, и частная становится не нужна.
+         PVZP тогда вернёт неиспользованную часть, удержав 20 % (макс. 3 000 Kč), если не было страховых случаев.</p>
+    </div>
+    <div class="note">
+      <h3>Анкета о здоровье</h3>
+      <p>Для Exclusive нужно заполнить zdravotní dotazník. Вопросы там про текущее здоровье и болезни, а не про планы на семью —
+         рассказывать о планах никому не нужно. Отвечать нужно честно: если что‑то скрыть, PVZP может отказать в выплате.
+         Если на момент оформления она уже беременна — это тоже придётся указать.</p>
+    </div>
+    <div class="note">
+      <h3>Почему Exclusive, а не PLUS</h3>
+      <p>Он на 85 Kč дешевле и при этом лучше: у PLUS отдельные лимиты 5 000 Kč в год на зубы и на лекарства
+         и исключены болезни, которые были до страховки. Единственный плюс PLUS — возможно, нет анкеты.</p>
+    </div>
+    <div class="note">
+      <h3>Что уточнить у PVZP</h3>
+      <p>Чем точно отличаются Standard и Comfort (в письме не написано), какой лимит Nadstandard в Exclusive,
+         сколько стоит тип «Novorozenec» и начинается ли период ожидания заново при продлении договора без перерыва.
+         Эти вопросы можно добавить в письмо ниже одной галочкой.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Ответное письмо в PVZP</h2>
+  <p class="sub">Выберите вариант (карточкой выше или здесь), заполните данные — текст на чешском готов к копированию.</p>
+  <div class="mail">
+    <div class="row">
+      <label class="f">Вариант
+        <select id="mPlan">
+          <option value="exclusive">Komplexní – Exclusive (19 967 Kč)</option>
+          <option value="plus">Komplexní – PLUS (20 052 Kč)</option>
+          <option value="comfort">Základní – Comfort (14 571 Kč)</option>
+          <option value="standard">Základní – Standard (6 390 Kč)</option>
+        </select>
+      </label>
+      <label class="f">Начало страховки
+        <input type="date" id="mStart">
+      </label>
+    </div>
+    <div class="row">
+      <label class="f">Имя и фамилия жены (как в паспорте)
+        <input type="text" id="mName" placeholder="Jméno Příjmení">
+      </label>
+      <label class="f">Дата рождения
+        <input type="text" id="mBirth" placeholder="dd.mm.rrrr">
+      </label>
+    </div>
+    <div class="row">
+      <label class="f">Номер паспорта
+        <input type="text" id="mPass" placeholder="">
+      </label>
+      <label class="f">Ваше имя (подпись)
+        <input type="text" id="mSign" placeholder="Jméno Příjmení">
+      </label>
+    </div>
+    <div class="checks">
+      <label><input type="checkbox" id="qDiff" checked> Спросить, чем отличаются Standard и Comfort</label>
+      <label><input type="checkbox" id="qNad" checked> Спросить лимит Nadstandard</label>
+      <label><input type="checkbox" id="qNov"> Спросить цену с типом «Novorozenec»</label>
+      <label><input type="checkbox" id="qWait"> Спросить, начинается ли период ожидания заново при продлении</label>
+    </div>
+    <textarea id="mText" readonly></textarea>
+    <button id="copy">Скопировать текст</button>
+    <span id="copied" style="margin-left:10px;color:var(--ok);display:none">Скопировано</span>
+  </div>
+</section>
+
+<footer>
+  Источники: письмо PVZP и документы IPID_KZPCE, IPID_KZPC_PLUS, IPID_ZZPC и pojistné podmínky KZPCE 1/25, KZPCP 1/25, ZZPC 1/22 из папки «pojisteni invo pvzp».
+  Это пересказ, а не юридическая консультация: решают условия в самом договоре. Сайт ничего не отправляет и не сохраняет.
+</footer>
+
+</div>
+
+<script>
+  const PLANS = {
+    standard:  { cz: "PVZP – základní zdravotní pojištění Standard", price: "6 390 Kč" },
+    comfort:   { cz: "PVZP – základní zdravotní pojištění Comfort", price: "14 571 Kč" },
+    exclusive: { cz: "PVZP – komplexní zdravotní pojištění Exclusive", price: "19 967 Kč" },
+    plus:      { cz: "PVZP – komplexní zdravotní pojištění PLUS", price: "20 052 Kč" },
+  };
+
+  const planCards = document.querySelectorAll(".plan");
+  const mPlan = document.getElementById("mPlan");
+
+  function selectPlan(id) {
+    planCards.forEach(c => c.classList.toggle("selected", c.dataset.id === id));
+    mPlan.value = id;
+    buildMail();
+  }
+  planCards.forEach(c => c.addEventListener("click", () => selectPlan(c.dataset.id)));
+  mPlan.addEventListener("change", () => selectPlan(mPlan.value));
+
+  function fmtDate(v) {
+    if (!v) return "[datum]";
+    const [y, m, d] = v.split("-");
+    return `${d}.${m}.${y}`;
+  }
+
+  function buildMail() {
+    const p = PLANS[mPlan.value];
+    const v = id => document.getElementById(id).value.trim();
+    const qs = [];
+    if (document.getElementById("qDiff").checked) qs.push("Jaký je přesně rozdíl mezi variantami Standard a Comfort (limity plnění)?");
+    if (document.getElementById("qNad").checked) qs.push("Jaká je výše limitu Nadstandard u zvolené varianty?");
+    if (document.getElementById("qNov").checked) qs.push("Jaká by byla cena při sjednání typu pojištění „Novorozenec“?");
+    if (document.getElementById("qWait").checked) qs.push("Pokud smlouvu po 12 měsících bez přerušení prodloužíme, začínají čekací doby běžet znovu?");
+
+    let t = `Dobrý den,
+
+děkujeme za zaslanou nabídku. Rádi bychom sjednali následující variantu:
+
+${p.cz} – 12 měsíců
+(územní rozsah: ČR + Schengen, druh pobytu: Sloučení rodiny)
+Cena: ${p.price}
+
+Údaje pojištěné osoby:
+Jméno a příjmení: ${v("mName") || "[jméno a příjmení]"}
+Datum narození: ${v("mBirth") || "[datum narození]"}
+Číslo cestovního pasu: ${v("mPass") || "[číslo pasu]"}
+Státní příslušnost: Ukrajina
+Požadovaný počátek pojištění: ${fmtDate(document.getElementById("mStart").value)}
+`;
+    if (qs.length) {
+      t += `\nZároveň bychom se rádi zeptali:\n` + qs.map((q, i) => `${i + 1}. ${q}`).join("\n") + "\n";
+    }
+    t += `
+Prosím o zaslání dalšího postupu pro sjednání online.
+
+Děkuji a přeji hezký den,
+${v("mSign") || "[jméno]"}`;
+    document.getElementById("mText").value = t;
+  }
+
+  document.querySelectorAll(".mail input, .mail select").forEach(el => {
+    el.addEventListener("input", buildMail);
+    el.addEventListener("change", buildMail);
+  });
+
+  document.getElementById("copy").addEventListener("click", async () => {
+    const ta = document.getElementById("mText");
+    try { await navigator.clipboard.writeText(ta.value); }
+    catch { ta.select(); document.execCommand("copy"); }
+    const s = document.getElementById("copied");
+    s.style.display = "inline";
+    setTimeout(() => s.style.display = "none", 1800);
+  });
+
+  const quiz = document.getElementById("quiz");
+  const result = document.getElementById("result");
+  quiz.addEventListener("change", () => {
+    const get = n => (quiz.querySelector(`input[name="${n}"]:checked`) || {}).value;
+    const kids = get("kids"), job = get("job"), chronic = get("chronic"), doctor = get("doctor");
+    if (!kids || !job || !chronic || !doctor) return;
+
+    let plan, title, why = [];
+
+    if (job === "yes") {
+      why.push("Если она оформлена по трудовому договору в чешской фирме, она, скорее всего, уже обязана быть в <b>государственной</b> страховке — тогда частная не нужна. Уточните у работодателя, прежде чем платить.");
+    }
+
+    if (kids !== "no" || doctor === "yes" || chronic === "yes") {
+      plan = "exclusive";
+      title = "Рекомендация: Komplexní Exclusive — 19 967 Kč";
+      if (kids !== "no") why.push("Только комплексная страховка покрывает беременность и роды. Базовая не покрывает их совсем.");
+      if (kids !== "no") why.push("Чем раньше начнётся договор, тем раньше пройдут 3 и 8 месяцев ожидания.");
+      if (doctor === "yes") why.push("Обычный гинеколог, профилактика и стоматолог есть только в комплексной.");
+      if (chronic === "yes") why.push("С хроническими болезнями PLUS не подходит — он их исключает. В Exclusive их нужно честно указать в анкете; PVZP может назначить осмотр.");
+      why.push("Exclusive на 85 Kč дешевле PLUS и без лимитов 5 000 Kč на зубы и лекарства.");
+    } else {
+      plan = "comfort";
+      title = "Можно обойтись базовой — Comfort (14 571 Kč) или Standard (6 390 Kč)";
+      why.push("Если детей точно не планируете и к врачам ходить не нужно, базовая закроет экстренные случаи.");
+      why.push("Comfort, судя по всему, — тот же продукт с большими лимитами. Спросите у PVZP, чем они отличаются, прежде чем доплачивать 8 000 Kč.");
+      why.push("Но разница с Exclusive — всего около 5 400 Kč в год, а за неё вы получаете полноценную страховку.");
+    }
+
+    result.innerHTML = `<h3>${title}</h3><ul>${why.map(w => `<li>${w}</li>`).join("")}</ul>
+      <button type="button" id="usePlan">Выбрать этот вариант</button>`;
+    result.classList.add("show");
+    document.getElementById("usePlan").onclick = () => {
+      selectPlan(plan);
+      document.getElementById("plans").scrollIntoView({ behavior: "smooth" });
+    };
+  });
+
+  selectPlan("exclusive");
+</script>
+</body>
+</html>
